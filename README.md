@@ -161,7 +161,7 @@ export  default  App;
 
 그리고 나서 리로딩된 페이지를 보면, 카테고리 항목들이 활성화 되어 있고 클릭했을 때 브라우저의 url 부분이 바뀌는 것을 확인할 수 있다.
 
-### 게시글 작성 컴포넌트 만들기
+### 기능 관련 페이지 컴포넌트 만들기
 
 url에 따라 다른 화면을 보여주고 싶다. 게시글 작성을 클릭했을 때, 게시글 작성하는 부분이 나타날 수 있도록 게시글을 작성하는 화면을 보여줄 컴포넌트를 만들자.
 
@@ -186,7 +186,6 @@ export  default  WritePost;
 이제 url이 /write일 때, 이 컴포넌트가 렌더링 될 수 있게 설정해주자.  App.js를 아래와 같이 수정한다.
 
 (그 전에 App.js에 있던 제목을 MainPage로 옮겨주었다.)
-
 
 ```js
 // App.js
@@ -223,3 +222,61 @@ Route는 path에 일치하는 url일 때 component를 렌더링해준다. Route�
 
 마찬가지로 Post List 부분도 컴포넌트를 만들어주고 Route를 추가해주자.
 
+### 게시글 작성 컴포넌트 수정
+게시글 작성 컴포넌트에 제목만 달랑 있는데, 메인화면으로 돌아갈 방법이 없으니 추가해주도록 하자. Go back to Main page를 넣어주고 Link를 이용해서 url을 변경해주도록 했다.
+
+```js
+import  React,  {  Component  }  from  'react';
+import  {  Link  }  from  'react-router-dom';
+
+class  WritePost  extends  Component {
+	render() {
+		return (
+			<div>
+				<h2>Write Post</h2>
+				<Link  to="/">Go back to Main page</Link>
+			</div>
+		);
+	}
+} 
+
+export  default  WritePost;
+```
+그리고 디자인을 좀 신경쓰고 싶어져서 bootstrap을 추가했다. reactstrap도 있는데, 컴포넌트들 굳이 import해서 쓰기 싫어서 그냥 bootstrap 추가하고 src/index.js에 css 파일을 import해주어서 적용했다. (이 지점에서 css 추가하느라 파일들이 많이 수정됨.)
+
+어쨌든, 게시글 작성 컴포넌트에 값을 작성해주는 input 필드를 추가했다.
+
+```js
+import  React,  {  Component  }  from  'react';
+import  {  Link  }  from  'react-router-dom';
+
+class  WritePost  extends  Component {
+	render() {
+		return (
+			<div>
+				<div  className="text-center">
+					<h2>Write Post</h2>
+					<Link  to="/">Go back to Main page</Link>
+				</div>
+				<form  className="mt-5">
+					<div  className="form-group">
+						<label  htmlFor="title">제목</label>
+						<input  className="form-control"  id="title"  />
+					</div>
+					<div  className="form-group">
+						<label  htmlFor="contents">내용</label>
+						<textarea  className="form-control"  id="contents"  rows={10} />
+					</div>
+					<div  className="row">
+						<div  className="col clearfix">
+							<input  type="submit"  className="btn btn-primary float-right"  value="Save"  />
+						</div>
+					</div>
+				</form>
+			</div>
+		);
+	}
+}
+
+export  default  WritePost;
+```

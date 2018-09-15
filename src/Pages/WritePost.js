@@ -9,14 +9,14 @@ class WritePost extends Component {
                <h2>Write Post</h2>
                <Link to="/">Go back to Main page</Link>
             </div>
-            <form className="mt-5">
+            <form autocomplete="off" className="mt-5">
                <div className="form-group">
-                  <label htmlFor="title"><div>제목</div></label>
+                  <label htmlFor="title">제목</label>
                   <input className="form-control" id="title" />
                </div>
 
                <div className="form-group">
-                  <label htmlFor="contents"><div>내용</div></label>
+                  <label htmlFor="contents">내용</label>
                   <textarea className="form-control" id="contents" rows={10} />
                </div>
                
