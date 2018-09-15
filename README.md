@@ -187,8 +187,9 @@ export  default  WritePost;
 
 (그 전에 App.js에 있던 제목을 MainPage로 옮겨주었다.)
 
-// App.js
+
 ```js
+// App.js
 import  React,  {  Component  }  from  'react';
 import  {  BrowserRouter,  Route  }  from  'react-router-dom';
 
