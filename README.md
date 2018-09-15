@@ -1,7 +1,10 @@
 # react-blog-tutorial
 
 React를 공부하고자 하는 목적으로 간단한 블로그 홈페이지를 제작하고자 함.
-주요 기능은 글 쓰기, 글 목록 받아와서 게시판 형태로 보여주기, 글 수정하기임.
+* 주요 기능
+	* 글 쓰기
+	* 글 수정하기
+	* 글 목록 보기
 
 ***
 ## create-react-app
@@ -226,15 +229,15 @@ Route는 path에 일치하는 url일 때 component를 렌더링해준다. Route�
 게시글 작성 컴포넌트에 제목만 달랑 있는데, 메인화면으로 돌아갈 방법이 없으니 추가해주도록 하자. Go back to Main page를 넣어주고 Link를 이용해서 url을 변경해주도록 했다.
 
 ```js
-import  React,  {  Component  }  from  'react';
-import  {  Link  }  from  'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-class  WritePost  extends  Component {
+class WritePost extends Component {
 	render() {
 		return (
 			<div>
 				<h2>Write Post</h2>
-				<Link  to="/">Go back to Main page</Link>
+				<Link to="/">Go back to Main page</Link>
 			</div>
 		);
 	}
@@ -267,9 +270,9 @@ class  WritePost  extends  Component {
 						<label  htmlFor="contents">내용</label>
 						<textarea  className="form-control"  id="contents"  rows={10} />
 					</div>
-					<div  className="row">
-						<div  className="col clearfix">
-							<input  type="submit"  className="btn btn-primary float-right"  value="Save"  />
+					<div className="row">
+						<div className="col clearfix">
+							<input type="submit"  className="btn btn-primary float-right" value="Save" />
 						</div>
 					</div>
 				</form>
@@ -278,5 +281,44 @@ class  WritePost  extends  Component {
 	}
 }
 
-export  default  WritePost;
+export default WritePost;
 ```
+
+### 게시글을 수정할 때 - Props, State
+이렇게 작성한 게시글을 저장하고, 수정하는 경우를 생각해보자. 입력할 내용이 [제목, 내용] 두 가지이므로 아마 화면이 똑같을 것이다. 그렇다면 수정을 위한 컴포넌트를 따로 만들지 말고 재사용 할 수 있으면 얼마나 좋을까?
+
+### 게시글 목록
+```js
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+class PostList extends Component {
+	render() {
+		return (
+			<div>
+				<div className="text-center">
+					<h2>Post List</h2>
+					<Link to="/">Go back to Main page</Link>
+				</div>
+				<table className="table mt-5 text-center">
+					<thead>
+						<th scope="col">#</th>
+						<th scope="col">title</th>
+						<th scope="col">link</th>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row">1</th>
+							<td>Sample Post</td>
+							<td><Link to={`/post/${1}`}>View Post</Link></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		);
+	}
+}
+
+export default PostList;
+```
+게시글 목록을 보여주는 테이블을 다음과 같이 추가했다.  포스트를 보여주기 위한 Link 부분을 잘 보면 `(백틱)을 사용했는데, 문자열에 자바스크립트 변수를 추가해서 완성하고 싶을 때 사용하는 ES6 문법이다. URL을 만들 때 종종 사용한다.
