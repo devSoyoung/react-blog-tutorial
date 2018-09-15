@@ -9,10 +9,14 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="app">
-          <Route path="/write" component={WritePost} />
-          <Route path="/list" component={PostList} />
-          <Route exact path="/" component={MainPage} />
+        <div className="app mx-auto" style={{width: '800px'}}>
+          <div className="mt-5 card border-primary">
+            <div className="card-body">
+              <Route path="/write" component={WritePost} />
+              <Route path="/list" component={PostList} />
+              <Route exact path="/" component={MainPage} />
+            </div>
+          </div>
         </div>  
       </BrowserRouter>
     );
