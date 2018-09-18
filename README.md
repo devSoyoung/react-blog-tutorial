@@ -285,7 +285,161 @@ export default WritePost;
 ```
 
 ### 게시글을 수정할 때 - Props, State
-이렇게 작성한 게시글을 저장하고, 수정하는 경우를 생각해보자. 입력할 내용이 [제목, 내용] 두 가지이므로 아마 화면이 똑같을 것이다. 그렇다면 수정을 위한 컴포넌트를 따로 만들지 말고 재사용 할 수 있으면 얼마나 좋을까?
+> 이렇게 작성한 게시글을 저장하고, 수정하는 경우를 생각해보자. 입력할 내용이 [제목, 내용] 두 가지이므로 아마 화면이 똑같을 것이다. 그렇다면 수정을 위한 컴포넌트를 따로 만들지 말고 재사용 할 수 있으면 얼마나 좋을까?
+
+게시글을 수정하는 컴포넌트를 만든다고 생각해보자.
+
+실제 페이지에서는 서버에서 데이터를 가져와서 input 필드에 값을 채워줄 것이고, 그렇게 채워진 값을 사용자 입력으로 수정하려고 하면 동작을 안한다. state가 바뀌어야 react 화면이 다시 렌더링 되기 때문이다.
+
+그래서 input 필드에 변경이 일어날 때, state를 바꾸어주어야 한다. 그래서 모든 input 필드를 state에 저장해두고, input의 onChange 이벤트 핸들러가 setState를 호출해서 상태를 변경하도록 만들어야한다.
+
+일단 먼저 EditPost.js 파일을 만들었다. (src의 Pages 디렉토리 안에)
+```js
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+class EditPost extends Component {
+	constructor(props) {
+		super(props);
+	}
+	
+	render() {
+		return (
+			<div>
+				<div className="text-center">
+					<h3>Edit Post</h3>
+					<Link to="/">Go back to Main page</Link>
+				</div>
+				<div className="mt-3">
+					
+				</div>
+			</div>
+		);
+	}
+}
+
+export  default  EditPost;
+```
+
+이제 상태를 추가해 줄 차례다. constructor에서 클래스에 상태를 추가해주자.
+
+```js
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+class EditPost extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			title: "This is Title",
+			content: "This is Content",
+	}
+	
+	render() {
+		const { title, content } =  this.state;
+		return (
+			<div>
+				<div className="text-center">
+					<h3>Edit Post</h3>
+					<Link to="/">Go back to Main page</Link>
+				</div>
+				<div className="mt-3">
+					<label><h4>Title</h4></label>
+					<input className="form-control" type="text" value={title} />
+				</div>
+				<div className="mt-3">
+					<label><h4>Title</h4></label>
+					<textarea className="form-control" rows={10} type="text" value={title} />
+				</div>
+			</div>
+		);
+	}
+}
+
+export  default  EditPost;
+```
+
+상태를 추가해주고, render함수에 input 필드를 추가해서 value도 state의 값으로 지정해주었다. 그리고 저장해서 실행해보면, input 필드의 값을 아무리 입력해도 수정되지 않는다. 크롬 관리자도구를 켜보면 다음과 같은 에러도 볼 수 있다.
+
+> Warning: Failed prop type: You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
+
+onChange 핸들러 없이 value를 설정했기 때문에, read-only 필드로 렌더링되어 변경이 불가능하다는 뜻. `defaultValue`를 사용하라고 되어있는데 여기(아직 링크 못찾아서 안달음ㅠㅠ)를 보면 input은 state로 관리하는게 좋다고 되어있다.
+
+나중에 서버로 전송하거나 가져와서 값을 처리할 때, store에 연결해서 등 상태들을 한 곳에 집중시켜서 관리하라고 권하고 있다. 그래서, state로 관리하는 방법은 아래와 같다. 
+
+```js
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+class EditPost extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			title: "This is Title",
+			content: "This is Content",
+	}
+
+	handleChange = (target, e) => (
+		this.setState({
+			[target]: e.target.value
+		})
+	)
+	
+	render() {
+		const { title, content } =  this.state;
+		const { handleChange } =  this;
+		return (
+			<div>
+				<div className="text-center">
+					<h3>Edit Post</h3>
+					<Link to="/">Go back to Main page</Link>
+				</div>
+				<div className="mt-3">
+					<label><h4>Title</h4></label>
+					<input className="form-control" type="text" value={title} 
+						onChange={(e) =>  handleChange('title', e)} />
+				</div>
+				<div className="mt-3">
+					<label><h4>Title</h4></label>
+					<textarea className="form-control" rows={10} type="text" value={title} 
+						onChange={(e) =>  handleChange('title', e)}/>
+				</div>
+			</div>
+		);
+	}
+}
+
+export  default  EditPost;
+```
+
+이렇게 하면 state로 input을 관리할 수 있다. 값을 가져오고 싶을 때에도, DOM에 직접 접근해서 값을 가져올 필요 없이, state에서 가져오면 된다.	
+
+해당 컴포넌트에서 값을 수정하는 경우는 state로 관리하고, setState를 통해 값을 수정해서 변화가 생기면 다시 렌더링을 하도록 해준다.(state를 직접 수정하는 것은 불가능하다.) 그렇다면, 다른 컴포넌트로 값을 전달(내 render()의 return에 렌더링 되는 자식 컴포넌트에게 전달)하는 경우는 어떻게 할까? 위 코드에 답이 있는데, 바로 props다. 
+
+
+#### ES6의 클래스와 super(), extends
+자바스크립트는 프로토타입 기반 객체지향 언어이다. 프로토타입 기반 프로그래밍은 클래스가 필요 없는 객체지향 프로그래밍 스타일로 프로토타입 체인, 클로저 등으로 객체 지향 언어의 상속, 캡슐화 등을 구현할 수 있다.
+
+하지만 클래스 기반 언어에 익숙한 프로그래머들은 프로토타입 기반 프로그래밍 방식이 혼란스러울 수 있으며 자바스크립트를 어렵게 느끼게하는 하나의 장벽처럼 인식되었다. ES6의 클래스는 기존 프로토타입 기반 객체지향 프로그래밍보다 클래스 기반 언어에 익숙한 프로그래머가 보다 빠르게 학습할 수 있는 단순명료한 새로운 문법을 제시하고 있다. 그렇다고 ES6의 클래스가 새로운 객체지향 모델을 제공하는 것은 아니며, 사실 **클래스도 함수**이고 기존 프로토타입 기반 패턴의 [Syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar)일 뿐이다.  [(출처)](https://poiemaweb.com/es6-class)
+
+* **extends**
+	extends를 사용하여 부모 클래스를 상속받는 자식 클래스를 정의할 수 있다.
+	```js
+	class Child extends Parent {
+		...
+	}
+	```
+* **super**
+	부모 클래스를 참조할 때 또는 부모 클래스의 constructor를 호출할 때 사용한다. 
+	
+	1. *super 메소드(super())는 부모 클래스의 인스턴스를 생성*
+
+		> super 메소드는 자식 class의 생성자 내부에서 부모 클래스의 생성자를 호출한다.(=부모 클래스의 인스턴스를 생성한다.) 자식 클래스의 constructor에서 super()를 호출하지 않으면 this에 대한 참조에러가 난다. 
+		
+	2. *super 키워드(super.)는 부모 클래스에 대한 참조*
+
+	
+	
 
 ### 게시글 목록
 ```js

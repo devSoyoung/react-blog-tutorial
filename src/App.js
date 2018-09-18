@@ -4,6 +4,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import MainPage from './Pages/MainPage';
 import WritePost from './Pages/WritePost';
 import PostList from './Pages/PostList';
+import EditPost from './Pages/EditPost';
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
           <div className="mt-5 card border-primary">
             <div className="card-body">
               <Route path="/write" component={WritePost} />
+              <Route path="/edit" component={EditPost} />
               <Route path="/list" component={PostList} />
               <Route exact path="/" component={MainPage} />
             </div>

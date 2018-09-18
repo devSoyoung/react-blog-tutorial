@@ -22,7 +22,7 @@ class WritePost extends Component {
                
                <div className="row">
                   <div className="col clearfix">
-                     <input type="submit" className="btn btn-primary float-right" value="Save" />
+                     <Link to="/view"><div></div></Link>
                   </div>
                </div>
             </form>
